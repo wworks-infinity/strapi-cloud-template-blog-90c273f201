@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_knowledge_base_resources",
+  "info": {
+    "displayName": "Resource",
+    "description": "Link to supporting knowledge base material"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

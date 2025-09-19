@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_knowledge_base_sections",
+  "info": {
+    "displayName": "Section",
+    "description": "Structured article or release note section"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "body": {
+      "type": "richtext"
+    }
+  }
+}

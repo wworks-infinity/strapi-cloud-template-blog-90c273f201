@@ -3,7 +3,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const mime = require('mime-types');
-const { categories, authors, articles, global, about } = require('../data/data.json');
+const { categories, authors, articles, global, about, knowledgeBase } = require('../data/data.json');
 
 async function seedExampleApp() {
   const shouldImportSeedData = await isFirstRun();
@@ -101,12 +101,53 @@ async function uploadFile(file, name) {
 async function createEntry({ model, entry }) {
   try {
     // Actually create the entry in Strapi
-    await strapi.documents(`api::${model}.${model}`).create({
+    return await strapi.documents(`api::${model}.${model}`).create({
       data: entry,
     });
   } catch (error) {
     console.error({ model, entry, error });
   }
+}
+
+function getEntryDocumentId(entry) {
+  if (!entry) {
+    return null;
+  }
+
+  return entry.documentId || entry.id || null;
+}
+
+async function connectRelation({ model, documentId, attribute, entries }) {
+  if (!documentId) {
+    return;
+  }
+
+  const relations = entries
+    .map((entry) => {
+      if (entry?.documentId) {
+        return { documentId: entry.documentId };
+      }
+
+      if (entry?.id) {
+        return { id: entry.id };
+      }
+
+      return null;
+    })
+    .filter((identifier) => identifier !== null);
+
+  if (!relations.length) {
+    return;
+  }
+
+  await strapi.documents(`api::${model}.${model}`).update({
+    documentId,
+    data: {
+      [attribute]: {
+        connect: relations,
+      },
+    },
+  });
 }
 
 async function checkFileExistsBeforeUpload(files) {
@@ -236,6 +277,183 @@ async function importAuthors() {
   }
 }
 
+async function importKnowledgeBaseGlobals() {
+  if (!knowledgeBase?.global) {
+    return;
+  }
+
+  await createEntry({
+    model: 'knowledge-base-global',
+    entry: {
+      ...knowledgeBase.global,
+      publishedAt: Date.now(),
+    },
+  });
+}
+
+async function importKnowledgeBaseAudiences() {
+  const audienceMap = new Map();
+
+  if (!knowledgeBase?.audiences) {
+    return audienceMap;
+  }
+
+  for (const audience of knowledgeBase.audiences) {
+    const createdAudience = await createEntry({
+      model: 'knowledge-base-audience',
+      entry: {
+        ...audience,
+        publishedAt: Date.now(),
+      },
+    });
+
+    if (createdAudience) {
+      audienceMap.set(createdAudience.slug || audience.slug, createdAudience);
+    }
+  }
+
+  return audienceMap;
+}
+
+async function importKnowledgeBaseCollections(audienceMap) {
+  const collectionMap = new Map();
+
+  if (!knowledgeBase?.collections) {
+    return collectionMap;
+  }
+
+  for (const collection of knowledgeBase.collections) {
+    const { audienceSlugs = [], ...collectionData } = collection;
+
+    const createdCollection = await createEntry({
+      model: 'knowledge-base-collection',
+      entry: {
+        ...collectionData,
+        publishedAt: Date.now(),
+      },
+    });
+
+    if (createdCollection) {
+      const audiencesToConnect = audienceSlugs
+        .map((slug) => audienceMap.get(slug))
+        .filter(Boolean);
+
+      await connectRelation({
+        model: 'knowledge-base-collection',
+        documentId: getEntryDocumentId(createdCollection),
+        attribute: 'audiences',
+        entries: audiencesToConnect,
+      });
+
+      collectionMap.set(createdCollection.slug || collection.slug, createdCollection);
+    }
+  }
+
+  return collectionMap;
+}
+
+async function importKnowledgeBaseArticles(audienceMap, collectionMap) {
+  const articleMap = new Map();
+
+  if (!knowledgeBase?.articles) {
+    return articleMap;
+  }
+
+  for (const article of knowledgeBase.articles) {
+    const { audienceSlugs = [], collectionSlugs = [], ...articleData } = article;
+
+    const createdArticle = await createEntry({
+      model: 'knowledge-base-article',
+      entry: {
+        ...articleData,
+        publishedAt: Date.now(),
+      },
+    });
+
+    if (createdArticle) {
+      const audiencesToConnect = audienceSlugs
+        .map((slug) => audienceMap.get(slug))
+        .filter(Boolean);
+      const collectionsToConnect = collectionSlugs
+        .map((slug) => collectionMap.get(slug))
+        .filter(Boolean);
+
+      const documentId = getEntryDocumentId(createdArticle);
+
+      await connectRelation({
+        model: 'knowledge-base-article',
+        documentId,
+        attribute: 'audiences',
+        entries: audiencesToConnect,
+      });
+
+      await connectRelation({
+        model: 'knowledge-base-article',
+        documentId,
+        attribute: 'collections',
+        entries: collectionsToConnect,
+      });
+
+      articleMap.set(createdArticle.slug || article.slug, createdArticle);
+    }
+  }
+
+  return articleMap;
+}
+
+async function importKnowledgeBaseReleaseNotes(audienceMap, articleMap) {
+  if (!knowledgeBase?.releaseNotes) {
+    return;
+  }
+
+  for (const releaseNote of knowledgeBase.releaseNotes) {
+    const { audienceSlugs = [], articleSlugs = [], ...releaseNoteData } = releaseNote;
+
+    const createdReleaseNote = await createEntry({
+      model: 'knowledge-base-release-note',
+      entry: {
+        ...releaseNoteData,
+        publishedAt: Date.now(),
+      },
+    });
+
+    if (!createdReleaseNote) {
+      continue;
+    }
+
+    const audiencesToConnect = audienceSlugs
+      .map((slug) => audienceMap.get(slug))
+      .filter(Boolean);
+    const articlesToConnect = articleSlugs
+      .map((slug) => articleMap.get(slug))
+      .filter(Boolean);
+
+    const documentId = getEntryDocumentId(createdReleaseNote);
+
+    await connectRelation({
+      model: 'knowledge-base-release-note',
+      documentId,
+      attribute: 'audiences',
+      entries: audiencesToConnect,
+    });
+
+    await connectRelation({
+      model: 'knowledge-base-release-note',
+      documentId,
+      attribute: 'articles',
+      entries: articlesToConnect,
+    });
+  }
+}
+
+async function importKnowledgeBase() {
+  await importKnowledgeBaseGlobals();
+  const audienceMap = await importKnowledgeBaseAudiences();
+  const collectionMap = await importKnowledgeBaseCollections(audienceMap);
+  const articleMap = await importKnowledgeBaseArticles(audienceMap, collectionMap);
+  await importKnowledgeBaseReleaseNotes(audienceMap, articleMap);
+}
+
 async function importSeedData() {
   // Allow read of application content types
   await setPublicPermissions({
@@ -244,6 +462,11 @@ async function importSeedData() {
     author: ['find', 'findOne'],
     global: ['find', 'findOne'],
     about: ['find', 'findOne'],
+    'knowledge-base-global': ['find', 'findOne'],
+    'knowledge-base-audience': ['find', 'findOne'],
+    'knowledge-base-collection': ['find', 'findOne'],
+    'knowledge-base-article': ['find', 'findOne'],
+    'knowledge-base-release-note': ['find', 'findOne'],
   });
 
   // Create all entries
@@ -252,6 +475,7 @@ async function importSeedData() {
   await importArticles();
   await importGlobal();
   await importAbout();
+  await importKnowledgeBase();
 }
 
 async function main() {

@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "knowledge_base_articles",
+  "info": {
+    "singularName": "knowledge-base-article",
+    "pluralName": "knowledge-base-articles",
+    "displayName": "Knowledge Base Article",
+    "description": "How-to and conceptual knowledge base articles"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "sections": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.section"
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.resource"
+    },
+    "collections": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::knowledge-base-collection.knowledge-base-collection",
+      "inversedBy": "articles"
+    },
+    "audiences": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::knowledge-base-audience.knowledge-base-audience",
+      "inversedBy": "articles"
+    },
+    "release_notes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::knowledge-base-release-note.knowledge-base-release-note",
+      "mappedBy": "articles"
+    }
+  }
+}

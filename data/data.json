@@ -93,7 +93,10 @@
         },
         {
           "__component": "shared.slider",
-          "files": ["coffee-art.jpg", "coffee-beans.jpg"]
+          "files": [
+            "coffee-art.jpg",
+            "coffee-beans.jpg"
+          ]
         }
       ]
     },
@@ -128,7 +131,10 @@
         },
         {
           "__component": "shared.slider",
-          "files": ["coffee-art.jpg", "coffee-beans.jpg"]
+          "files": [
+            "coffee-art.jpg",
+            "coffee-beans.jpg"
+          ]
         }
       ]
     },
@@ -163,7 +169,10 @@
         },
         {
           "__component": "shared.slider",
-          "files": ["coffee-art.jpg", "coffee-beans.jpg"]
+          "files": [
+            "coffee-art.jpg",
+            "coffee-beans.jpg"
+          ]
         }
       ]
     },
@@ -198,7 +207,10 @@
         },
         {
           "__component": "shared.slider",
-          "files": ["coffee-art.jpg", "coffee-beans.jpg"]
+          "files": [
+            "coffee-art.jpg",
+            "coffee-beans.jpg"
+          ]
         }
       ]
     },
@@ -233,9 +245,215 @@
         },
         {
           "__component": "shared.slider",
-          "files": ["coffee-art.jpg", "coffee-beans.jpg"]
+          "files": [
+            "coffee-art.jpg",
+            "coffee-beans.jpg"
+          ]
         }
       ]
     }
-  ]
+  ],
+  "knowledgeBase": {
+    "global": {
+      "title": "Strapi Knowledge Base",
+      "slug": "strapi-knowledge-base",
+      "summary": "Guides and updates that help every team succeed with Strapi.",
+      "heroTitle": "Welcome to the Strapi Knowledge Base",
+      "heroDescription": "Explore curated guides, resources, and release highlights tailored to your team.",
+      "resources": [
+        {
+          "title": "Strapi Documentation",
+          "summary": "Browse the official documentation covering every Strapi feature.",
+          "url": "https://docs.strapi.io"
+        },
+        {
+          "title": "Product Roadmap",
+          "summary": "See what's shipping next and follow along with the roadmap.",
+          "url": "https://portal.productboard.com/strapi"
+        }
+      ]
+    },
+    "audiences": [
+      {
+        "name": "Developers",
+        "slug": "developers",
+        "summary": "Build integrations, extend Strapi, and automate your content workflows.",
+        "description": "Developers get deep technical guidance, API references, and best practices for building production-ready applications with Strapi.",
+        "resources": [
+          {
+            "title": "API Tokens",
+            "summary": "Authenticate requests securely with Strapi's API tokens.",
+            "url": "https://docs.strapi.io/dev-docs/configurations/authentication"
+          }
+        ]
+      },
+      {
+        "name": "Content Managers",
+        "slug": "content-managers",
+        "summary": "Create, review, and publish content confidently.",
+        "description": "Content managers find workflows, editorial tools, and tips for collaborating with their teams inside Strapi.",
+        "resources": [
+          {
+            "title": "Review Workflows",
+            "summary": "Coordinate your editorial process with approval stages.",
+            "url": "https://docs.strapi.io/user-docs/latest/content-manager/review-workflows"
+          }
+        ]
+      }
+    ],
+    "collections": [
+      {
+        "title": "Getting Started",
+        "slug": "getting-started",
+        "summary": "Spin up Strapi and ship your first project in minutes.",
+        "description": "Learn how to install Strapi, model data structures, and invite teammates to collaborate.",
+        "audienceSlugs": [
+          "developers",
+          "content-managers"
+        ],
+        "resources": [
+          {
+            "title": "Starter Templates",
+            "summary": "Kickstart a new project with ready-to-use templates.",
+            "url": "https://strapi.io/starters"
+          }
+        ]
+      },
+      {
+        "title": "Customization",
+        "slug": "customization",
+        "summary": "Tailor Strapi to match your product and brand.",
+        "description": "Extend Strapi with custom code, tweak the admin, and connect to external services.",
+        "audienceSlugs": [
+          "developers"
+        ],
+        "resources": [
+          {
+            "title": "Design System",
+            "summary": "Use Strapi's design system to create cohesive admin UI extensions.",
+            "url": "https://design-system.strapi.io"
+          }
+        ]
+      }
+    ],
+    "articles": [
+      {
+        "title": "Install Strapi locally",
+        "slug": "install-strapi-locally",
+        "summary": "Use the CLI to install dependencies and launch Strapi on your machine.",
+        "sections": [
+          {
+            "title": "Create a new project",
+            "body": "Run `npx create-strapi-app@latest my-project` and follow the interactive prompts to scaffold a Strapi app."
+          },
+          {
+            "title": "Start developing",
+            "body": "Navigate into your project folder, install dependencies, then run `npm run develop` to open the admin panel."
+          }
+        ],
+        "resources": [
+          {
+            "title": "Quick Start Guide",
+            "summary": "Complete walkthrough for the Strapi CLI",
+            "url": "https://docs.strapi.io/dev-docs/quick-start"
+          }
+        ],
+        "collectionSlugs": [
+          "getting-started"
+        ],
+        "audienceSlugs": [
+          "developers"
+        ]
+      },
+      {
+        "title": "Model content with the Content-Type Builder",
+        "slug": "model-content-with-the-content-type-builder",
+        "summary": "Use the Content-Type Builder to create structured collection types.",
+        "sections": [
+          {
+            "title": "Open the builder",
+            "body": "From the admin panel sidebar, choose *Content-Type Builder* and create a new collection type."
+          },
+          {
+            "title": "Add fields",
+            "body": "Drag and drop the fields your team needs, then save and wait for Strapi to restart before using the new type."
+          }
+        ],
+        "resources": [
+          {
+            "title": "Field Reference",
+            "summary": "Understand each field type and when to use it.",
+            "url": "https://docs.strapi.io/user-docs/latest/content-type-builder/fields"
+          }
+        ],
+        "collectionSlugs": [
+          "getting-started"
+        ],
+        "audienceSlugs": [
+          "content-managers"
+        ]
+      },
+      {
+        "title": "Customize the Strapi admin UI",
+        "slug": "customize-the-strapi-admin-ui",
+        "summary": "Brand the admin panel and extend it with custom React components.",
+        "sections": [
+          {
+            "title": "Override styles",
+            "body": "Create an admin extension folder and provide custom themes to align Strapi with your product colors."
+          },
+          {
+            "title": "Inject new views",
+            "body": "Register new menu links and React components to surface additional project tooling directly inside Strapi."
+          }
+        ],
+        "resources": [
+          {
+            "title": "Admin Customization",
+            "summary": "Learn how to extend the Strapi admin app.",
+            "url": "https://docs.strapi.io/dev-docs/admin-customization"
+          }
+        ],
+        "collectionSlugs": [
+          "customization"
+        ],
+        "audienceSlugs": [
+          "developers"
+        ]
+      }
+    ],
+    "releaseNotes": [
+      {
+        "title": "April 2024 release",
+        "slug": "april-2024-release",
+        "summary": "Bulk publishing improvements and brand-new admin customization options.",
+        "releasedAt": "2024-04-15",
+        "sections": [
+          {
+            "title": "Bulk publish content",
+            "body": "Publish multiple entries at once directly from the Content Manager with new bulk actions."
+          },
+          {
+            "title": "Extensible admin",
+            "body": "Admin extensions now support lifecycle hooks so developers can react to navigation changes and API events."
+          }
+        ],
+        "resources": [
+          {
+            "title": "Release Blog Post",
+            "summary": "Deep dive into everything new in April.",
+            "url": "https://strapi.io/blog"
+          }
+        ],
+        "audienceSlugs": [
+          "developers",
+          "content-managers"
+        ],
+        "articleSlugs": [
+          "model-content-with-the-content-type-builder",
+          "customize-the-strapi-admin-ui"
+        ]
+      }
+    ]
+  }
 }
