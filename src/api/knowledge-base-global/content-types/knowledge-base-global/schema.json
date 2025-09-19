@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "knowledge_base_globals",
+  "info": {
+    "singularName": "knowledge-base-global",
+    "pluralName": "knowledge-base-globals",
+    "displayName": "Knowledge Base Global",
+    "description": "Global configuration for the knowledge base"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroDescription": {
+      "type": "text"
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.resource"
+    }
+  }
+}

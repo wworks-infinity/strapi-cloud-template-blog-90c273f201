@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "knowledge_base_release_notes",
+  "info": {
+    "singularName": "knowledge-base-release-note",
+    "pluralName": "knowledge-base-release-notes",
+    "displayName": "Knowledge Base Release Note",
+    "description": "Release notes that surface knowledge base updates"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "releasedAt": {
+      "type": "date"
+    },
+    "sections": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.section"
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.resource"
+    },
+    "audiences": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::knowledge-base-audience.knowledge-base-audience",
+      "inversedBy": "release_notes"
+    },
+    "articles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::knowledge-base-article.knowledge-base-article",
+      "inversedBy": "release_notes"
+    }
+  }
+}
