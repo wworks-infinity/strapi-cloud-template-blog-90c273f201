@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "welcome_guides",
+  "info": {
+    "singularName": "welcome-guide",
+    "pluralName": "welcome-guides",
+    "displayName": "Welcome Guide",
+    "description": "Single-model welcome guide entries without relations"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "summary": {
+      "type": "text"
+    },
+    "sections": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.section"
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "knowledge-base.resource"
+    }
+  }
+}
