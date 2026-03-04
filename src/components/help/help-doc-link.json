@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_help_help_doc_links",
+  "info": {
+    "displayName": "Help Doc Link",
+    "description": "Link to a knowledge base article or specific section"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "article": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::knowledge-base-article.knowledge-base-article"
+    },
+    "sectionAnchor": {
+      "type": "string",
+      "description": "Anchor id on the article page (without #)"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
