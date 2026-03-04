@@ -18,7 +18,9 @@ const isMatch = (config, route) => {
   if (config.matchType === 'prefix') return route.startsWith(config.routePattern);
   if (config.matchType === 'wildcard') {
     const base = (config.routePattern || '').replace(/\*+$/, '');
-    return base.length > 0 && route.startsWith(base);
+    if (!base) return false;
+    const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
+    return route === normalizedBase || route.startsWith(base);
   }
   return false;
 };
