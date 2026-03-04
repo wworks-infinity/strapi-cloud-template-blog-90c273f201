@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "help_configs",
+  "info": {
+    "singularName": "help-config",
+    "pluralName": "help-configs",
+    "displayName": "Help Config",
+    "description": "Maps app routes to related knowledge base articles"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "routeKey": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "routePattern": {
+      "type": "string",
+      "required": true
+    },
+    "matchType": {
+      "type": "enumeration",
+      "enum": ["exact", "prefix", "wildcard"],
+      "default": "exact"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "enumeration",
+      "enum": ["help", "info", "book"],
+      "default": "help"
+    },
+    "articles": {
+      "type": "component",
+      "repeatable": true,
+      "component": "help.help-doc-link"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
