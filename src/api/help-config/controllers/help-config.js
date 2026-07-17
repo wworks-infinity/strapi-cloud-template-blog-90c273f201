@@ -28,9 +28,10 @@ const isMatch = (config, route) => {
 module.exports = createCoreController('api::help-config.help-config', ({ strapi }) => ({
   async findByRoute(ctx) {
     const route = ctx.request?.query?.route;
+    const search = ctx.request?.query?.search?.trim().toLowerCase();
 
-    if (!route || typeof route !== 'string') {
-      return ctx.badRequest('Route query parameter is required');
+    if ((!route || typeof route !== 'string') && !search) {
+      return ctx.badRequest('Route or search query parameter is required');
     }
 
     const entities = await strapi.db.query('api::help-config.help-config').findMany({
@@ -43,6 +44,22 @@ module.exports = createCoreController('api::help-config.help-config', ({ strapi 
         },
       },
     });
+
+    if (search) {
+      const results = entities.filter((config) => {
+        const titleMatch = config.title?.toLowerCase().includes(search);
+
+        const routeMatch = config.routePattern?.toLowerCase().includes(search);
+
+        const articleMatch = config.articles?.some((item) =>
+          item.article?.title?.toLowerCase().includes(search)
+        );
+
+        return titleMatch || routeMatch || articleMatch;
+      });
+
+      return this.transformResponse(results);
+    }
 
     const matches = entities.filter((config) => isMatch(config, route));
 
