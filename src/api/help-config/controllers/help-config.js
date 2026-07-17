@@ -55,8 +55,9 @@ module.exports = createCoreController('api::help-config.help-config', ({ strapi 
       for (const config of entities) {
         for (const item of config.articles || []) {
           const itemMatch =
-            item.title?.toLowerCase().includes(search) ||
-            item.article?.title?.toLowerCase().includes(search);
+            item.title?.toLowerCase().includes(search) 
+            // ||
+            // item.article?.title?.toLowerCase().includes(search);
           if (!itemMatch) continue;
 
           const key = item.article?.documentId || `link-${item.id}`;
