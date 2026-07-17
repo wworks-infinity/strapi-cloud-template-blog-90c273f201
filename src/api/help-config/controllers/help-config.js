@@ -35,7 +35,7 @@ module.exports = createCoreController('api::help-config.help-config', ({ strapi 
     }
 
     const entities = await strapi.db.query('api::help-config.help-config').findMany({
-      where: { isActive: true },
+      where: { isActive: true, publishedAt: { $notNull: true } },
       populate: {
         articles: {
           populate: {
@@ -58,7 +58,25 @@ module.exports = createCoreController('api::help-config.help-config', ({ strapi 
         return titleMatch || routeMatch || articleMatch;
       });
 
-      return this.transformResponse(results);
+      // Merge every matched config's articles into one list so the search
+      // response has the same shape as the route response (data.articles).
+      const seen = new Set();
+      /** @type {any[]} */
+      const articles = [];
+      for (const config of results) {
+        for (const item of config.articles || []) {
+          const key = item.article?.documentId || `link-${item.id}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          articles.push(item);
+        }
+      }
+
+      return this.transformResponse({
+        title: `Search results for "${search}"`,
+        icon: 'help',
+        articles,
+      });
     }
 
     const matches = entities.filter((config) => isMatch(config, route));
