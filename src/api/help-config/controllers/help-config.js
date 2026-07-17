@@ -46,25 +46,19 @@ module.exports = createCoreController('api::help-config.help-config', ({ strapi 
     });
 
     if (search) {
-      const results = entities.filter((config) => {
-        const titleMatch = config.title?.toLowerCase().includes(search);
-
-        const routeMatch = config.routePattern?.toLowerCase().includes(search);
-
-        const articleMatch = config.articles?.some((item) =>
-          item.article?.title?.toLowerCase().includes(search)
-        );
-
-        return titleMatch || routeMatch || articleMatch;
-      });
-
-      // Merge every matched config's articles into one list so the search
-      // response has the same shape as the route response (data.articles).
+      // Match at the article level: include a link only when its own title or
+      // its linked article's title contains the search term. Results are
+      // merged into one list so the shape matches the route response.
       const seen = new Set();
       /** @type {any[]} */
       const articles = [];
-      for (const config of results) {
+      for (const config of entities) {
         for (const item of config.articles || []) {
+          const itemMatch =
+            item.title?.toLowerCase().includes(search) ||
+            item.article?.title?.toLowerCase().includes(search);
+          if (!itemMatch) continue;
+
           const key = item.article?.documentId || `link-${item.id}`;
           if (seen.has(key)) continue;
           seen.add(key);
